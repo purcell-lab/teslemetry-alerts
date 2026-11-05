@@ -22,7 +22,13 @@ class TeslemetryAlertsEntity(Entity):
         self.vin = vin
         self._attr_unique_id = f"{vin}-{key}"
         self._attr_translation_key = key
-        self._attr_device_info = manager.device_info(vin)
+        # Join the Teslemetry integration's vehicle device the way helpers
+        # do (device_entry, not device_info): device_info would make Home
+        # Assistant create a device of our own instead.
+        if device := manager.teslemetry_device(vin):
+            self.device_entry = device
+        else:
+            self._attr_device_info = manager.device_info(vin)
         self._update_attrs()
 
     @property

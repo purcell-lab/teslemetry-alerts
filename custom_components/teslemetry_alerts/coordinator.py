@@ -12,6 +12,7 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 
 from .const import (
+    DOMAIN,
     EVENT_ALERT,
     EVENT_ENDED,
     EVENT_STARTED,
@@ -81,13 +82,38 @@ class AlertManager:
         self.vehicles = {vin: VehicleAlerts(name) for vin, name in vehicles.items()}
         self.connected = False
 
+    def teslemetry_device(self, vin: str) -> dr.DeviceEntry | None:
+        """Return the Teslemetry integration's device for this vehicle.
+
+        Only a device that belongs to a Teslemetry config entry counts: an
+        identifier match alone could be a device of our own.
+        """
+        entries = self.hass.config_entries.async_entries(TESLEMETRY_DOMAIN)
+        entry_ids = {e.entry_id for e in entries}
+        for device in dr.async_get(self.hass).devices.values():
+            if (TESLEMETRY_DOMAIN, vin) in device.identifiers and (
+                device.config_entries & entry_ids
+            ):
+                return device
+        return None
+
+    def vehicle_name(self, vin: str) -> str:
+        """Return the vehicle's name as Home Assistant shows it.
+
+        The Teslemetry device's name (as renamed in Home Assistant) wins over
+        the name Teslemetry reports, so events and entity IDs agree.
+        """
+        device = self.teslemetry_device(vin) or dr.async_get(
+            self.hass
+        ).async_get_device(identifiers={(DOMAIN, vin)})
+        if device and (name := device.name_by_user or device.name):
+            return name
+        return self.vehicles[vin].name
+
     def device_info(self, vin: str) -> DeviceInfo:
-        """Join the Teslemetry integration's device for this vehicle."""
-        identifiers = {(TESLEMETRY_DOMAIN, vin)}
-        if dr.async_get(self.hass).async_get_device(identifiers=identifiers):
-            return DeviceInfo(identifiers=identifiers)
+        """Our own device, for a vehicle the Teslemetry integration lacks."""
         return DeviceInfo(
-            identifiers=identifiers,
+            identifiers={(DOMAIN, vin)},
             name=self.vehicles[vin].name,
             manufacturer="Tesla",
             serial_number=vin,
@@ -162,7 +188,7 @@ class AlertManager:
         data = alert_attributes(alert)
         self.hass.bus.async_fire(
             EVENT_ALERT,
-            {"vin": vin, "vehicle": vehicle.name, "type": event_type, **data},
+            {"vin": vin, "vehicle": self.vehicle_name(vin), "type": event_type, **data},
         )
         async_dispatcher_send(
             self.hass,

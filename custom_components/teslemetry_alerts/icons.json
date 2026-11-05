@@ -1,10 +1,25 @@
 {
   "entity": {
-    "event": { "alert": { "default": "mdi:bell-alert-outline" } },
+    "event": {
+      "alert": {
+        "default": "mdi:bell-alert-outline"
+      }
+    },
     "sensor": {
-      "latest_alert": { "default": "mdi:message-alert-outline" },
-      "active_alerts": { "default": "mdi:alert-outline" },
-      "latest_error": { "default": "mdi:alert-octagon-outline" }
+      "latest_alert": {
+        "default": "mdi:message-alert-outline"
+      },
+      "active_alerts": {
+        "default": "mdi:alert-outline"
+      },
+      "latest_error": {
+        "default": "mdi:alert-octagon-outline"
+      }
+    }
+  },
+  "services": {
+    "get_alerts": {
+      "service": "mdi:format-list-bulleted"
     }
   }
 }

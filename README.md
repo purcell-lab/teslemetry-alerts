@@ -34,6 +34,34 @@ Assistant asks for a new one.
 
 `audiences` says who an alert is for: `Customer`, `Service` or `ServiceFix`.
 
+Entities are named after the vehicle as Home Assistant names it: a car whose
+Teslemetry device is renamed `MY T` gets `sensor.my_t_latest_alert`. Vehicles
+the Teslemetry integration doesn't have get a device of their own, named as
+Teslemetry reports them.
+
+## Action: `teslemetry_alerts.get_alerts`
+
+Returns the alerts held for each vehicle, newest first, with the same detail
+as the attributes above. That includes the history Teslemetry sends on
+connect (up to 100 alerts per vehicle), so it covers alerts from before the
+last restart that never fired an event.
+
+| Field | Meaning |
+|---|---|
+| `device_id` | Vehicles to return (default: all) |
+| `active_only` | Only alerts that have not ended |
+| `audience` | Only `Customer`, `Service` or `ServiceFix` alerts |
+| `limit` | Maximum alerts per vehicle (1-100) |
+
+```yaml
+action: teslemetry_alerts.get_alerts
+data:
+  active_only: true
+response_variable: alerts
+```
+
+The response is `{"vehicles": [{"vin", "name", "alerts": [...], "latest_error"}]}`.
+
 ## Events
 
 Each alert that starts or ends also fires a `teslemetry_alert` event on the

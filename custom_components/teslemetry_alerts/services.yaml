@@ -1,0 +1,25 @@
+get_alerts:
+  fields:
+    device_id:
+      selector:
+        device:
+          multiple: true
+          integration: teslemetry_alerts
+    active_only:
+      default: false
+      selector:
+        boolean:
+    audience:
+      selector:
+        select:
+          options:
+            - "Customer"
+            - "Service"
+            - "ServiceFix"
+    limit:
+      default: 100
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: box

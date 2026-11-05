@@ -4,12 +4,16 @@
       "user": {
         "title": "Teslemetry access token",
         "description": "Create an access token in the Teslemetry console (teslemetry.com/console). Alerts are streamed for every vehicle on the account.",
-        "data": { "access_token": "Access token" }
+        "data": {
+          "access_token": "Access token"
+        }
       },
       "reauth_confirm": {
         "title": "Teslemetry access token rejected",
         "description": "Teslemetry no longer accepts the saved access token. Enter a new token for the same account.",
-        "data": { "access_token": "Access token" }
+        "data": {
+          "access_token": "Access token"
+        }
       }
     },
     "error": {
@@ -29,15 +33,56 @@
         "name": "Alert",
         "state_attributes": {
           "event_type": {
-            "state": { "started": "Started", "ended": "Ended" }
+            "state": {
+              "started": "Started",
+              "ended": "Ended"
+            }
           }
         }
       }
     },
     "sensor": {
-      "latest_alert": { "name": "Latest alert" },
-      "active_alerts": { "name": "Active alerts" },
-      "latest_error": { "name": "Latest telemetry error" }
+      "latest_alert": {
+        "name": "Latest alert"
+      },
+      "active_alerts": {
+        "name": "Active alerts"
+      },
+      "latest_error": {
+        "name": "Latest telemetry error"
+      }
+    }
+  },
+  "services": {
+    "get_alerts": {
+      "name": "Get alerts",
+      "description": "Returns the alerts held for each vehicle, newest first, with full detail. Includes the history Teslemetry sends on connect, up to 100 alerts per vehicle.",
+      "fields": {
+        "device_id": {
+          "name": "Vehicles",
+          "description": "Vehicles to return. Leave empty for all."
+        },
+        "active_only": {
+          "name": "Active only",
+          "description": "Only return alerts that have not ended."
+        },
+        "audience": {
+          "name": "Audience",
+          "description": "Only return alerts for this audience."
+        },
+        "limit": {
+          "name": "Limit",
+          "description": "Maximum alerts per vehicle."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "not_loaded": {
+      "message": "Teslemetry Alerts is not loaded."
+    },
+    "unknown_device": {
+      "message": "Device {device_id} was not found."
     }
   }
 }
