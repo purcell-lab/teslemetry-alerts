@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Teslemetry access token",
+        "description": "Create an access token in the Teslemetry console (teslemetry.com/console). Alerts are streamed for every vehicle on the account.",
+        "data": { "access_token": "Access token" }
+      },
+      "reauth_confirm": {
+        "title": "Teslemetry access token rejected",
+        "description": "Teslemetry no longer accepts the saved access token. Enter a new token for the same account.",
+        "data": { "access_token": "Access token" }
+      }
+    },
+    "error": {
+      "invalid_auth": "Teslemetry rejected the access token.",
+      "cannot_connect": "Could not reach Teslemetry."
+    },
+    "abort": {
+      "already_configured": "This Teslemetry account is already configured.",
+      "no_vehicles": "There are no vehicles on this Teslemetry account.",
+      "reauth_successful": "The access token was updated.",
+      "wrong_account": "The token belongs to a different Teslemetry account."
+    }
+  },
+  "entity": {
+    "event": {
+      "alert": {
+        "name": "Alert",
+        "state_attributes": {
+          "event_type": {
+            "state": { "started": "Started", "ended": "Ended" }
+          }
+        }
+      }
+    },
+    "sensor": {
+      "latest_alert": { "name": "Latest alert" },
+      "active_alerts": { "name": "Active alerts" },
+      "latest_error": { "name": "Latest telemetry error" }
+    }
+  }
+}

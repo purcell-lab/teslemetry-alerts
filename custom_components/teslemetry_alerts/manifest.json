@@ -1,0 +1,13 @@
+{
+  "domain": "teslemetry_alerts",
+  "name": "Teslemetry Alerts",
+  "after_dependencies": ["teslemetry"],
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "https://github.com/purcell-lab/teslemetry-alerts",
+  "integration_type": "hub",
+  "iot_class": "cloud_push",
+  "issue_tracker": "https://github.com/purcell-lab/teslemetry-alerts/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
